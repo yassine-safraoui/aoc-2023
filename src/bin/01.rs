@@ -1,4 +1,6 @@
-use log::{debug, error, warn};
+use log::{debug, error, info, warn};
+use std::time::Instant;
+pub struct Day();
 
 advent_of_code::solution!(1);
 
@@ -7,6 +9,7 @@ pub struct Input {
 }
 
 pub fn parse_input(input: &str) -> Input {
+    // let start = Instant::now();
     let mut lines = vec![];
     for line in input.lines() {
         let line = line.trim();
@@ -15,6 +18,7 @@ pub fn parse_input(input: &str) -> Input {
         }
         lines.push(line.to_string())
     }
+    // println!("Parsing input took: {:?}", start.elapsed());
     Input { lines }
 }
 
@@ -25,38 +29,23 @@ pub fn part_one(input: &Input) -> Option<u64> {
             warn!("Found line containing non ascii characters, line: {}", line);
             continue;
         }
-        let string_line = line.clone();
-        let line = Vec::from(line.as_bytes());
-        let mut first_digit: Option<u32> = None;
-        let mut last_digit: Option<u32> = None;
-        for (index, ch) in line.iter().enumerate() {
+        let line = line.as_bytes();
+        let mut first_digit: Option<u8> = None;
+        let mut last_digit: Option<u8> = None;
+        for ch in line {
             if ch.is_ascii_digit() {
-                let digit = (*ch as char).to_digit(10);
-                if digit.is_none() {
-                    error!("Failed to parse digit in line, line: {}", string_line);
-                    continue;
-                }
+                let digit = *ch - b'0';
                 if first_digit.is_none() {
-                    debug!(
-                        "Found first digit in line, line: {}, index: {}",
-                        string_line, index
-                    );
-                    first_digit = Some(digit.unwrap());
+                    first_digit = Some(digit);
                 }
-                debug!(
-                    "Found digit in line, line: {}, index: {}",
-                    string_line, index
-                );
-                last_digit = Some(digit.unwrap());
+                last_digit = Some(digit);
             }
         }
         if first_digit.is_none() {
-            error!("Invalid first digit in line, line: {}", string_line);
-            break;
+            continue;
         }
         if last_digit.is_none() {
-            error!("Invalid last digit in line, line: {}", string_line);
-            break;
+            continue;
         }
         result += (first_digit.unwrap() * 10 + last_digit.unwrap()) as u64;
     }
@@ -188,6 +177,8 @@ mod tests {
 
     #[test]
     fn custom_test() {
+        // let input = parse_input(&advent_of_code::template::read_file("examples", DAY));
+        // debug!("input length: {}", input.lines.len());
         let input = Input {
             lines: vec![String::from("zoe8threeifj9")],
         };
