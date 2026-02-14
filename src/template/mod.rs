@@ -39,6 +39,9 @@ pub fn read_file_part(folder: &str, day: Day, part: u8) -> String {
 /// Creates the constant `DAY` and sets up the input and runner for each part.
 ///
 /// The optional, second parameter (1 or 2) allows you to only run a single part of the solution.
+///
+/// This version parses the raw input using a user-defined `parse_input(&str)` function
+/// and passes the parsed, `Copy`-able input value to each part.
 #[macro_export]
 macro_rules! solution {
     ($day:expr) => {
@@ -61,7 +64,12 @@ macro_rules! solution {
 
         fn main() {
             use $crate::template::runner::*;
-            let input = $crate::template::read_file("inputs", DAY);
+            env_logger::init();
+
+            // Read and parse once, then pass the typed input (which must be Copy)
+            let raw = $crate::template::read_file("inputs", DAY);
+            let input = parse_input(&raw);
+
             $( run_part($func, &input, DAY, $part); )*
         }
     };
