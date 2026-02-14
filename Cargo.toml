@@ -32,5 +32,6 @@ anyhow = "1.0.100"
 eframe = "0.33.3"
 egui = "0.33.3"
 egui_extras = "0.33.3"
+macroquad = "0.4.14"
 
 # Solution dependencies
