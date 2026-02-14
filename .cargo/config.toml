@@ -10,3 +10,4 @@ time = "run --quiet --release -- time"
 
 [env]
 AOC_YEAR = "2025"
+AOC_USER_ID="4359065"
